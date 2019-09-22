@@ -1,0 +1,26 @@
+import serial #Import Serial Library
+from visual import * #Import all the vPython library
+
+
+arduinoSerialData = serial.Serial('com4', 9600) #Create an object for the Serial port. Adjust 'com11' to whatever port your arduino is sending to.
+#measuringRod = cylinder( radius= .1, length=6, color=color.yellow, pos=(-3,-2,0))
+#lengthLabel = label(pos=(5,5,0), text='Object Distance: ', box=false, height=5)
+#target=box(pos=(0,-.5,0), length=.2, width=3, height=3, color=color.green)
+scene.background=color.cyan
+border=ring(pos=vector(0,0,0),axis=vector(0,0,1),radius=3, thickness=0.1)
+borde=ring(pos=vector(0,0,0),axis=vector(0,0,1),radius=5, thickness=0.1)
+target=sphere(pos=vector(0,-.5,0),radius=0.5,emissive=true)
+while (1==1):  #Create a loop that continues to read and display the data
+    rate(20)#Tell vpython to run this loop 20 times a second
+    if (arduinoSerialData.inWaiting()>0):  #Check to see if a data point is available on the serial port
+        myData = arduinoSerialData.readline() #Read the distance measure as a string
+        print myData #Print the measurement to confirm things are working
+        distance = float(myData) #convert reading to a floating point number
+        if distance>5:target.color=color.green
+        elif distance>3 and distance<5:target.color=color.yellow
+        else:target.color=color.red
+        #measuringRod.length=distance #Change the length of your measuring rod to your last measurement
+        target.pos=(distance,-.5,0)
+        target.radius=1
+        #myLabel= 'Target Distance is: ' + myData #Create label by appending string myData to string
+        #lengthLabel.text = myLabel #display updated myLabel on your graphic
